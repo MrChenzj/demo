@@ -1,0 +1,23 @@
+  //w_mz_ghcl_ghcl  w_ShareThread
+    string ls_win
+    ls_win =parent.classname() 
+    //messagebox('ls_win','::'+ls_win)
+    //创建新线程 
+    SharedObjectRegister (ls_win,'w_share') 
+    //引用实例 
+    SharedObjectGet ('w_share',w_ShareThread ) 
+    //调用窗口居中函数 
+    w_ShareThread.post wf_share(currentrow)
+    //中止线程 
+    //SharedObjectunRegister ('w_ShareThread') 
+
+
+
+    //得到数据窗口的总列数 
+        ll_column_count = long(dw_djxz.Describe("DataWindow.Column.Count"))
+        dw_djxz.Modify("qrbz.Protect='0~tIf(tjbz =1 ,0,1)'")
+        for li_row = 1 to ll_column_count
+            ls_ColumnName = dw_djxz.Describe("#"+string(li_row)+".name")
+            dw_djxz.Modify(ls_ColumnName +".Background.Color='16777215~tIf(tjbz =1,16777215,8421504)'")
+        next
+    

@@ -1,0 +1,61 @@
+
+---删除表空间
+drop tablespace 表空间名称 including contents and datafiles; 
+
+　---持续跟踪有性能影响的SQL
+SELECT * FROM (
+　　SELECT PARSING_USER_ID,EXECUTIONS,SORTS,
+　　COMMAND_TYPE,DISK_READS,sql_text FROM v$sqlarea
+　　ORDER BY disk_reads DESC
+　　)
+　　WHERE ROWNUM<10
+
+---开启连接webservice权限
+BEGIN  
+        dbms_network_acl_admin.create_acl(acl         => 'httprequestpermission.xml',  --文件名称，能够随意取名
+                                          DESCRIPTION => 'Normal Access',  
+                                          principal   => 'PORTAL_HIS',  --角色
+                                          is_grant    => TRUE,  
+                                          PRIVILEGE   => 'connect',  
+                                          start_date  => NULL,  
+                                          end_date    => NULL);  
+END;  
+/
+
+commit; --必需要提交；
+
+ SELECT any_path FROM resource_view WHERE any_path like '/sys/acls/%.xml';
+ 
+begin  
+        dbms_network_acl_admin.add_privilege(acl        => 'httprequestpermission.xml',  
+                                             principal  => 'portal_his',  --用户。请依照实际变更
+                                             is_grant   => TRUE,  
+                                             privilege  => 'connect',  
+                                             start_date => null,  
+                                             end_date   => null);  
+end;  
+
+ begin  
+        dbms_network_acl_admin.assign_acl(acl        => 'httprequestpermission.xml',  
+                                          host       => '14.215.219.149',  --http网页地址
+                                          lower_port => 8280,  --http端口
+                                          upper_port => NULL);  
+    end;  
+/
+
+commit;
+
+
+begin
+
+  dbms_network_acl_admin.drop_acl(
+
+    '/sys/acls/httprequestpermission.xml'
+
+  );
+
+
+
+end;
+
+select * from dba_users
