@@ -1,0 +1,12 @@
+//添加次文件，定义导出顺序
+//LIBRARY "项目名称"
+LIBRARY "TestDll"
+
+//定义函数的导出顺序
+//EXPORTS   导出关键字
+//     函数名@顺序号
+EXPORTS
+	GetMaxNumber @1
+	ShowMsg @2
+	UTF8_DECODE @3
+	UTF8_ENCODE @4
